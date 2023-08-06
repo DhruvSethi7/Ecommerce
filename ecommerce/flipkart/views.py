@@ -1,8 +1,8 @@
 from django.shortcuts import render
-
+import json
 # Create your views here.
 from django.http import HttpResponse
-from .models import product,Contact,Orders
+from .models import product,Contact,Orders,OrderUpdate
 from math import ceil
 def index(request):
         # products=product.objects.all()
@@ -57,5 +57,30 @@ def checkout(request):
         order.save()
         thank=True
         id=order.order_id
+        update = OrderUpdate(order_id=id, update_desc="The order has been placed")
+        update.save()
         return render(request, 'flipkart/checkout.html', {'thank': thank, 'id': id})
     return render(request, 'flipkart/checkout.html')
+
+def tracker(request):
+    if request.method=="POST":
+        orderId = request.POST.get('orderId', '')
+        email = request.POST.get('email', '')
+
+        try:
+            order = Orders.objects.filter(order_id=orderId, email=email)
+            if len(order)>0:
+                update = OrderUpdate.objects.filter(order_id=orderId)
+                updates = []
+                for item in update:
+                    updates.append({'text': item.update_desc, 'time': item.timestamp})
+                    response = json.dumps(updates, default=str)
+
+                    print(len(updates));
+                return HttpResponse(response)
+            else:
+                return HttpResponse('{snn}')
+        except Exception as e:
+            return HttpResponse('{www}')
+
+    return render(request, 'flipkart/tracker.html')
