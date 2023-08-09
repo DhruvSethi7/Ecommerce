@@ -34,7 +34,7 @@ def contact(request):
         contact.save()
         print('gya ')
         val=True
-        render(request, 'flipkart/contact.html',{'filled':val})
+        return render(request, 'flipkart/contact.html',{'filled':val})
     return render(request,'flipkart/contact.html')
 
 
