@@ -24,17 +24,26 @@ class Contact(models.Model):
     def __str__(self):
         return self.name
 
-class Orders(models.Model):
-    order_id= models.AutoField(primary_key=True)
-    items_json= models.CharField(max_length=5000)
-    name=models.CharField(max_length=90)
-    email=models.CharField(max_length=111)
-    address=models.CharField(max_length=111)
-    city=models.CharField(max_length=111)
-    state=models.CharField(max_length=111)
-    zip_code=models.CharField(max_length=111)
-    phone=models.CharField(max_length=50,default=10)
+class OrderStatus(models.TextChoices):
+    PENDING = 'Pending'
+    PAID = 'Paid'
+    SHIPPED = 'Shipped'
+    DELIVERED = 'Delivered'
+    CANCELLED = 'Cancelled'
 
+class Orders(models.Model):
+    id = models.AutoField(primary_key=True)
+    order_id = models.CharField(max_length=10, unique=True)  # Ensuring the order_id is unique.
+    status = models.CharField(max_length=10, choices=OrderStatus.choices, default=OrderStatus.PENDING)
+    amount = models.IntegerField(default=0)
+    items_json = models.TextField()  # A TextField might be more suitable for storing long JSON strings.
+    name = models.CharField(max_length=90)
+    email = models.EmailField(max_length=254)  # Use EmailField for email validation.
+    address = models.CharField(max_length=255)
+    city = models.CharField(max_length=50)
+    state = models.CharField(max_length=50)
+    zip_code = models.CharField(max_length=10)
+    phone = models.CharField(max_length=50, blank=True)
 class OrderUpdate(models.Model):
     update_id= models.AutoField(primary_key=True)
     order_id= models.IntegerField(default="")

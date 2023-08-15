@@ -126,3 +126,5 @@ MEDIA_URL='/media/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+razorpaykey="rzp_test_NU5rDHWG0xge0G"
+razorpaysecret="RPw5rwTjUE7SzM39DdXzvAjk"
